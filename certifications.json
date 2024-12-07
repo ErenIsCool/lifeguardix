@@ -1,21 +1,10 @@
 {
-    "P123": {
-        "name": "John Smith",
-        "certifications": [
-            { "certNumber": "12345", "certName": "Standard First Aid", "valid": true },
-            { "certNumber": "23456", "certName": "CPR Level C", "valid": true }
-        ]
+    "P001": {
+        "name": "Eren Ulusoy",
+        "certifications": ["98496", "34436", "93646055", "76481284","72180764"]
     },
     "P456": {
         "name": "Jane Doe",
-        "certifications": [
-            { "certNumber": "67890", "certName": "Bronze Cross", "valid": false }
-        ]
-    },
-    "P001": {
-        "name": "Eren Ulusoy",
-        "certifications": [
-            { "certNumber": "67890", "certName": "Administrator", "valid": true }
-        ]
+        "certifications": ["95576", "34436"]
     }
 }

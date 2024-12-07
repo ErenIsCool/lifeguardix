@@ -1,0 +1,18 @@
+{
+    "91779": { "name": "Bronze Star", "valid": true },
+    "73306": { "name": "Bronze Medallion", "valid": true },
+    "95576": { "name": "Bronze Cross", "valid": true },
+    "52795": { "name": "National Lifeguard", "valid": true },
+    "51151": { "name": "Basic First Aid", "valid": true },
+    "80292": { "name": "Emergency First Aid", "valid": true },
+    "98496": { "name": "Standard First Aid", "valid": true },
+    "19193": { "name": "CPR - A", "valid": true },
+    "86687": { "name": "CPR - B", "valid": true },
+    "34436": { "name": "CPR - C", "valid": true },
+    "57359": { "name": "CPR - HCP", "valid": true },
+    "72180764": { "name": "Lifeguardix First Aid Instructor", "valid": true },
+    "93646055": { "name": "Lifeguardix Swim Instructor", "valid": true },
+    "76481284": { "name": "Lifeguardix Staff", "valid": true },
+    "23427027": { "name": "Lifeguardix Customer Service", "valid": true },
+    "23209411": { "name": "Lifeguardix Founder", "valid": true }
+}

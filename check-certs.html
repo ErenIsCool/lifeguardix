@@ -96,17 +96,26 @@
             }
 
             try {
-                const response = await fetch('certifications.json');
-                const data = await response.json();
+                // Fetch certifications and course details
+                const [certResponse, courseResponse] = await Promise.all([
+                    fetch('certifications.json'),
+                    fetch('courses.json')
+                ]);
 
-                const participant = data[participantId];
+                const certData = await certResponse.json();
+                const courseData = await courseResponse.json();
+
+                const participant = certData[participantId];
 
                 if (participant) {
                     let certList = `<h3>Certifications for ${participant.name}:</h3><ul>`;
-                    participant.certifications.forEach(cert => {
-                        certList += `<li>${cert.certName} (${cert.certNumber}) - ${
-                            cert.valid ? "Valid" : "Not Valid"
-                        }</li>`;
+                    participant.certifications.forEach(courseId => {
+                        const course = courseData[courseId];
+                        if (course) {
+                            certList += `<li>${course.name} (${courseId}) - ${
+                                course.valid ? "Valid" : "Not Valid"
+                            }</li>`;
+                        }
                     });
                     certList += "</ul>";
                     resultDiv.innerHTML = certList;
