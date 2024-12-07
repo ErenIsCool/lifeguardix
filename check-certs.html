@@ -113,7 +113,7 @@ document.getElementById('listCertsBtn').addEventListener('click', async () => {
 
             let certList = `<h3>Certifications for ${participant.name}:</h3>`;
             if (hasStaffRole) {
-                certList += `<p style="color: green; font-weight: bold;">Verified Staff Member ✅</p>`;
+                certList += `<p style="color: green; font-weight: bold;">Verified OLStaff Member ✅</p>`;
             }
             certList += `<ul>`;
             uniqueCerts.forEach(courseId => {
@@ -138,7 +138,6 @@ document.getElementById('listCertsBtn').addEventListener('click', async () => {
 
     resultDiv.style.display = "block";
 });
-
     </script>
 </body>
 </html>
