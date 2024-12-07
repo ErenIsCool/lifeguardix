@@ -35,8 +35,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        .form-group input,
-        .form-group textarea {
+        .form-group input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -83,10 +82,34 @@
             <label for="certifications">Certifications (comma-separated IDs):</label>
             <input type="text" id="certifications" placeholder="Enter Certification IDs (e.g., 98496,34436)">
         </div>
-        <button id="generateBtn">Generate JSON</button>
+        <button id="generateBtn">Add to JSON</button>
         <div id="result" class="result" style="display: none;"></div>
     </div>
+    <div class="container">
+        <h3>Current JSON Data</h3>
+        <button id="loadJsonBtn">Load Current JSON</button>
+        <div id="currentJson" class="result" style="display: none;"></div>
+    </div>
     <script>
+        let currentData = {}; // Store the current JSON structure
+
+        // Load and display the current JSON file
+        document.getElementById('loadJsonBtn').addEventListener('click', async () => {
+            const currentJsonDiv = document.getElementById('currentJson');
+
+            try {
+                const response = await fetch('certifications.json'); // Ensure the JSON file is in the same directory
+                currentData = await response.json();
+
+                currentJsonDiv.textContent = JSON.stringify(currentData, null, 4); // Pretty print JSON
+                currentJsonDiv.style.display = "block";
+            } catch (error) {
+                currentJsonDiv.textContent = "Error loading JSON file.";
+                currentJsonDiv.style.display = "block";
+            }
+        });
+
+        // Add a new participant to the current JSON
         document.getElementById('generateBtn').addEventListener('click', () => {
             const participantId = document.getElementById('participantId').value.trim();
             const participantName = document.getElementById('participantName').value.trim();
@@ -99,15 +122,15 @@
 
             const certifications = certificationsInput.split(',').map(cert => cert.trim());
 
-            const jsonOutput = {
-                [participantId]: {
-                    name: participantName,
-                    certifications: certifications
-                }
+            // Add or update the participant in the current data
+            currentData[participantId] = {
+                name: participantName,
+                certifications: certifications
             };
 
+            // Display the updated JSON
             const resultDiv = document.getElementById('result');
-            resultDiv.textContent = JSON.stringify(jsonOutput, null, 4); // Pretty print JSON
+            resultDiv.textContent = JSON.stringify(currentData, null, 4); // Pretty print JSON
             resultDiv.style.display = "block";
         });
     </script>
