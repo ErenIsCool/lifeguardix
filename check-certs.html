@@ -113,7 +113,8 @@ document.getElementById('listCertsBtn').addEventListener('click', async () => {
 
             let certList = `<h3>Certifications for ${participant.name}:</h3>`;
             if (hasStaffRole) {
-                certList += `<p style="color: green; font-weight: bold;">Verified OLStaff Member ✅</p>`;
+                certList += `<p style="color: green; font-weight: bold;">Verified Lifeguardix Staff Member ✅</p>`;
+                certList += `<p style="color: green; font-weight: bold;">${participant.name} is a Lifeguardix staff member ✅</p>`;
             }
             certList += `<ul>`;
             uniqueCerts.forEach(courseId => {
