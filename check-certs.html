@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifeguardix | Certification Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #0073e6;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            margin: 5px 0 0;
+            font-size: 1.2em;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #0073e6;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .form-group button {
+            background-color: #0073e6;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .form-group button:hover {
+            background-color: #005bb5;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .result.success {
+            color: #2d862d;
+            border-color: #2d862d;
+        }
+        .result.error {
+            color: #b50000;
+            border-color: #b50000;
+        }
+        footer {
+            background-color: #0073e6;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        footer p {
+            margin: 0;
+        }
+        footer a {
+            color: #ffcc00;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Certification Verification</h1>
+        <p>Verify Lifeguardix certifications quickly and easily</p>
+    </header>
+    <div class="container">
+        <h2>Enter Certification Details</h2>
+        <form id="verificationForm">
+            <div class="form-group">
+                <label for="certNumber">Certification Number</label>
+                <input type="text" id="certNumber" placeholder="Enter certification number" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Enter candidate's last name" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Verify Certification</button>
+            </div>
+        </form>
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Lifeguardix. All rights reserved. Contact us at <a href="mailto:admin@lifeguardix.com">admin@lifeguardix.com</a></p>
+    </footer>
+<script>
+    document.getElementById('verificationForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const certNumber = document.getElementById('certNumber').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const resultDiv = document.getElementById('result');
+
+        // Replace with your Google Apps Script Web App URL
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzYa-h_b1wYWR42C-RETHcsaUHs4jn7q-Pf7k-W2MUtyuyZNCfd0fDhx5Yv3uHCRpeR/exec';
+
+        try {
+            const response = await fetch(`${apiUrl}?certNumber=${certNumber}&lastName=${lastName}`);
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                resultDiv.textContent = data.message;
+                resultDiv.className = data.valid ? 'result success' : 'result error';
+            } else {
+                resultDiv.textContent = data.message;
+                resultDiv.className = 'result error';
+            }
+        } catch (error) {
+            resultDiv.textContent = 'An error occurred. Please try again later.';
+            resultDiv.className = 'result error';
+        }
+
+        resultDiv.style.display = 'block';
+    });
+</script>
