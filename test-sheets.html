@@ -106,44 +106,59 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script>
-        document.getElementById('testForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const dob = document.getElementById('dob').value;
-            const address = document.getElementById('address').value;
-            const postalCode = document.getElementById('postalCode').value;
-            const testPage = document.getElementById('testPage').value;
+document.getElementById('testForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-            try {
-                // Fetch the selected test page
-                const pdfResponse = await fetch(`/testpages/${testPage}`);
-                const pdfBytes = await pdfResponse.arrayBuffer();
+    // Get input values
+    const candidates = [
+        {
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            dob: document.getElementById('dob').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            postalCode: document.getElementById('postalCode').value.trim(),
+        },
+        // Add more candidate objects as needed
+    ];
+    const testPage = document.getElementById('testPage').value;
 
-                // Load the PDF and fill fields
-                const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
-                const form = pdfDoc.getForm();
+    try {
+        // Fetch the selected test page
+        const pdfResponse = await fetch(`/testpages/${testPage}`);
+        if (!pdfResponse.ok) {
+            throw new Error(`Failed to load PDF: ${pdfResponse.statusText}`);
+        }
+        const pdfBytes = await pdfResponse.arrayBuffer();
 
-                form.getTextField('FirstName').setText(firstName);
-                form.getTextField('LastName').setText(lastName);
-                form.getTextField('DOB').setText(dob);
-                form.getTextField('Address').setText(address);
-                form.getTextField('PostalCode').setText(postalCode);
+        // Load the PDF and fill fields
+        const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+        const form = pdfDoc.getForm();
 
-                // Export the filled PDF
-                const filledPdfBytes = await pdfDoc.save();
-                const blob = new Blob([filledPdfBytes], { type: 'application/pdf' });
-                const url = URL.createObjectURL(blob);
-
-                // Provide a download link
-                const resultDiv = document.getElementById('result');
-                resultDiv.innerHTML = `<a href="${url}" download="filled-${testPage}">Download Filled Test Page</a>`;
-                resultDiv.style.display = 'block';
-            } catch (error) {
-                console.error('Error generating test page:', error);
-                alert('An error occurred while generating the test page.');
-            }
+        // Fill fields for each candidate
+        candidates.forEach((candidate, index) => {
+            form.getTextField(`Last name ${index + 1}`).setText(candidate.lastName);
+            form.getTextField(`First name ${index + 1}`).setText(candidate.firstName);
+            form.getTextField(`Address ${index + 1}`).setText(candidate.address);
+            form.getTextField(`Postal Code ${index + 1}`).setText(candidate.postalCode);
+            form.getTextField(`Date of birth Month ${index + 1}`).setText(candidate.dob.split('-')[1]);
+            form.getTextField(`Date of birth Day ${index + 1}`).setText(candidate.dob.split('-')[2]);
+            form.getTextField(`Date of birth Year ${index + 1}`).setText(candidate.dob.split('-')[0]);
         });
+
+        // Export the filled PDF
+        const filledPdfBytes = await pdfDoc.save();
+        const blob = new Blob([filledPdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+
+        // Provide a download link
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = `<a href="${url}" download="filled-${testPage}">Download Filled Test Page</a>`;
+        resultDiv.style.display = 'block';
+    } catch (error) {
+        console.error('Error generating test page:', error);
+        alert(`An error occurred: ${error.message}`);
+    }
+});
     </script>
 </body>
 </html>
