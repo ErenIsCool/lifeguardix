@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Input Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #0073e6;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Staff Input Page</h1>
+    </header>
+    <div class="container">
+        <h3>Add New Participant</h3>
+        <div class="form-group">
+            <label for="participantId">Participant ID:</label>
+            <input type="text" id="participantId" placeholder="Enter Participant ID (e.g., P001)">
+        </div>
+        <div class="form-group">
+            <label for="participantName">Name:</label>
+            <input type="text" id="participantName" placeholder="Enter Participant Name">
+        </div>
+        <div class="form-group">
+            <label for="certifications">Certifications (comma-separated IDs):</label>
+            <input type="text" id="certifications" placeholder="Enter Certification IDs (e.g., 98496,34436)">
+        </div>
+        <button id="generateBtn">Generate JSON</button>
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const participantId = document.getElementById('participantId').value.trim();
+            const participantName = document.getElementById('participantName').value.trim();
+            const certificationsInput = document.getElementById('certifications').value.trim();
+
+            if (!participantId || !participantName || !certificationsInput) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const certifications = certificationsInput.split(',').map(cert => cert.trim());
+
+            const jsonOutput = {
+                [participantId]: {
+                    name: participantName,
+                    certifications: certifications
+                }
+            };
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = JSON.stringify(jsonOutput, null, 4); // Pretty print JSON
+            resultDiv.style.display = "block";
+        });
+    </script>
+</body>
+</html>
