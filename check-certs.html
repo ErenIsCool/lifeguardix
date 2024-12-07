@@ -84,53 +84,61 @@
         <div id="result" class="result" style="display: none;"></div>
     </div>
     <script>
-        document.getElementById('listCertsBtn').addEventListener('click', async () => {
-            const participantId = document.getElementById('participantId').value.trim();
-            const resultDiv = document.getElementById('result');
+document.getElementById('listCertsBtn').addEventListener('click', async () => {
+    const participantId = document.getElementById('participantId').value.trim();
+    const resultDiv = document.getElementById('result');
 
-            if (!participantId) {
-                resultDiv.textContent = "Please enter a Participant ID.";
-                resultDiv.className = "result error";
-                resultDiv.style.display = "block";
-                return;
+    if (!participantId) {
+        resultDiv.textContent = "Please enter a Participant ID.";
+        resultDiv.className = "result error";
+        resultDiv.style.display = "block";
+        return;
+    }
+
+    try {
+        // Fetch certifications and course details
+        const [certResponse, courseResponse] = await Promise.all([
+            fetch('certifications.json'),
+            fetch('courses.json')
+        ]);
+
+        const certData = await certResponse.json();
+        const courseData = await courseResponse.json();
+
+        const participant = certData[participantId];
+
+        if (participant) {
+            const uniqueCerts = [...new Set(participant.certifications)]; // Remove duplicate IDs
+            const hasStaffRole = uniqueCerts.some(id => id.length === 8); // Check for any 8-digit IDs
+
+            let certList = `<h3>Certifications for ${participant.name}:</h3>`;
+            if (hasStaffRole) {
+                certList += `<p style="color: green; font-weight: bold;">Verified Staff Member ✅</p>`;
             }
-
-            try {
-                // Fetch certifications and course details
-                const [certResponse, courseResponse] = await Promise.all([
-                    fetch('certifications.json'),
-                    fetch('courses.json')
-                ]);
-
-                const certData = await certResponse.json();
-                const courseData = await courseResponse.json();
-
-                const participant = certData[participantId];
-
-                if (participant) {
-                    let certList = `<h3>Certifications for ${participant.name}:</h3><ul>`;
-                    participant.certifications.forEach(courseId => {
-                        const course = courseData[courseId];
-                        if (course) {
-                            certList += `<li>${course.name} (${courseId}) - ${
-                                course.valid ? "Valid" : "Not Valid"
-                            }</li>`;
-                        }
-                    });
-                    certList += "</ul>";
-                    resultDiv.innerHTML = certList;
-                    resultDiv.className = "result success";
-                } else {
-                    resultDiv.textContent = "Participant not found.";
-                    resultDiv.className = "result error";
+            certList += `<ul>`;
+            uniqueCerts.forEach(courseId => {
+                const course = courseData[courseId];
+                if (course) {
+                    certList += `<li>${course.name} (${courseId}) - ${
+                        course.valid ? "Valid" : "Not Valid"
+                    }</li>`;
                 }
-            } catch (error) {
-                resultDiv.textContent = "An error occurred while retrieving the certifications.";
-                resultDiv.className = "result error";
-            }
+            });
+            certList += "</ul>";
+            resultDiv.innerHTML = certList;
+            resultDiv.className = "result success";
+        } else {
+            resultDiv.textContent = "Participant not found.";
+            resultDiv.className = "result error";
+        }
+    } catch (error) {
+        resultDiv.textContent = "An error occurred while retrieving the certifications.";
+        resultDiv.className = "result error";
+    }
 
-            resultDiv.style.display = "block";
-        });
+    resultDiv.style.display = "block";
+});
+
     </script>
 </body>
 </html>
