@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page Filler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #0073e6;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Test Page Filler</h1>
+    </header>
+    <div class="container">
+        <h3>Fill Out a Test Page</h3>
+        <form id="testForm">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" id="address" required>
+            </div>
+            <div class="form-group">
+                <label for="postalCode">Postal Code:</label>
+                <input type="text" id="postalCode" required>
+            </div>
+            <div class="form-group">
+                <label for="testPage">Select Test Page:</label>
+                <select id="testPage" required>
+                    <option value="bronze-medallion.pdf">Bronze Medallion</option>
+                    <option value="bronze-cross.pdf">Bronze Cross</option>
+                    <option value="national-lifeguard.pdf">National Lifeguard</option>
+                    <!-- Add more test pages here -->
+                </select>
+            </div>
+            <button type="submit">Generate Test Page</button>
+        </form>
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const dob = document.getElementById('dob').value;
+            const address = document.getElementById('address').value;
+            const postalCode = document.getElementById('postalCode').value;
+            const testPage = document.getElementById('testPage').value;
+
+            try {
+                // Fetch the selected test page
+                const pdfResponse = await fetch(`/testpages/${testPage}`);
+                const pdfBytes = await pdfResponse.arrayBuffer();
+
+                // Load the PDF and fill fields
+                const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+                const form = pdfDoc.getForm();
+
+                form.getTextField('FirstName').setText(firstName);
+                form.getTextField('LastName').setText(lastName);
+                form.getTextField('DOB').setText(dob);
+                form.getTextField('Address').setText(address);
+                form.getTextField('PostalCode').setText(postalCode);
+
+                // Export the filled PDF
+                const filledPdfBytes = await pdfDoc.save();
+                const blob = new Blob([filledPdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+
+                // Provide a download link
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `<a href="${url}" download="filled-${testPage}">Download Filled Test Page</a>`;
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Error generating test page:', error);
+                alert('An error occurred while generating the test page.');
+            }
+        });
+    </script>
+</body>
+</html>
