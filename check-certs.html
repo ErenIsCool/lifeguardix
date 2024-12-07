@@ -109,23 +109,44 @@ document.getElementById('listCertsBtn').addEventListener('click', async () => {
 
         if (participant) {
             const uniqueCerts = [...new Set(participant.certifications)]; // Remove duplicate IDs
-            const hasStaffRole = uniqueCerts.some(id => id.length === 8); // Check for any 8-digit IDs
+            const staffCerts = uniqueCerts.filter(id => id.length === 8); // Get staff certifications
+            const normalCerts = uniqueCerts.filter(id => id.length !== 8); // Get normal certifications
 
             let certList = `<h3>Certifications for ${participant.name}:</h3>`;
-            if (hasStaffRole) {
+
+            // Add Verified Lifeguardix Staff Member badge if they have staff certifications
+            if (staffCerts.length > 0) {
                 certList += `<p style="color: green; font-weight: bold;">Verified Lifeguardix Staff Member ✅</p>`;
-                certList += `<p style="color: green; font-weight: bold;">${participant.name} is a Lifeguardix staff member ✅</p>`;
             }
-            certList += `<ul>`;
-            uniqueCerts.forEach(courseId => {
-                const course = courseData[courseId];
-                if (course) {
-                    certList += `<li>${course.name} (${courseId}) - ${
-                        course.valid ? "Valid" : "Not Valid"
-                    }</li>`;
-                }
-            });
-            certList += "</ul>";
+
+            // List staff certifications separately
+            if (staffCerts.length > 0) {
+                certList += `<h4>Staff Certifications:</h4><ul>`;
+                staffCerts.forEach(courseId => {
+                    const course = courseData[courseId];
+                    if (course) {
+                        certList += `<li>${course.name} (${courseId}) - ${
+                            course.valid ? "Valid" : "Not Valid"
+                        }</li>`;
+                    }
+                });
+                certList += `</ul>`;
+            }
+
+            // List normal certifications
+            if (normalCerts.length > 0) {
+                certList += `<h4>Normal Certifications:</h4><ul>`;
+                normalCerts.forEach(courseId => {
+                    const course = courseData[courseId];
+                    if (course) {
+                        certList += `<li>${course.name} (${courseId}) - ${
+                            course.valid ? "Valid" : "INVALID"
+                        }</li>`;
+                    }
+                });
+                certList += `</ul>`;
+            }
+
             resultDiv.innerHTML = certList;
             resultDiv.className = "result success";
         } else {
