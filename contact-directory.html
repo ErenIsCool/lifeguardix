@@ -30,23 +30,26 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .contact {
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin: 20px 0;
         }
-        .contact h2 {
-            font-size: 1.5em;
-            color: #0073e6;
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
         }
-        .contact p {
-            font-size: 1.2em;
-            margin: 5px 0;
+        table th {
+            background-color: #0073e6;
+            color: white;
         }
-        .contact a {
+        table td a {
             color: #0073e6;
             text-decoration: none;
             font-weight: bold;
         }
-        .contact a:hover {
+        table td a:hover {
             text-decoration: underline;
         }
     </style>
@@ -56,18 +59,28 @@
         <h1>Contact Directory</h1>
     </header>
     <div class="container">
-        <div class="contact">
-            <h2>Eren U - Founder</h2>
-            <p>Email: <a href="mailto:eren@lifeguardix.com">eren@lifeguardix.com</a></p>
-        </div>
-        <div class="contact">
-            <h2>General Inquiries</h2>
-            <p>Email: <a href="mailto:info@lifeguardix.com">info@lifeguardix.com</a></p>
-        </div>
-        <div class="contact">
-            <h2>Help and Support</h2>
-            <p>Email: <a href="mailto:admin@lifeguardix.com">admin@lifeguardix.com</a></p>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name/Department</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Eren U - Founder</td>
+                    <td><a href="mailto:eren@lifeguardix.com">eren@lifeguardix.com</a></td>
+                </tr>
+                <tr>
+                    <td>General Inquiries</td>
+                    <td><a href="mailto:info@lifeguardix.com">info@lifeguardix.com</a></td>
+                </tr>
+                <tr>
+                    <td>Help and Support</td>
+                    <td><a href="mailto:admin@lifeguardix.com">admin@lifeguardix.com</a></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
