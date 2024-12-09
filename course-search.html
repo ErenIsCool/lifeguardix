@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Code Search | Lifeguardix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #0073e6;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3em;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .container input {
+            width: 100%;
+            padding: 10px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .container button {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #005bb5;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #0073e6;
+        }
+        .error {
+            color: red;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Course Code Search</h1>
+    </header>
+    <div class="container">
+        <h2>Enter a Course Code to Find Its Name</h2>
+        <input type="text" id="courseCode" placeholder="Enter course code (e.g., 98496)" />
+        <button onclick="searchCourse()">Search</button>
+        <div id="result" class="result"></div>
+        <div id="error" class="error"></div>
+    </div>
+    <script>
+        let coursesData = {};
+
+        // Fetch the courses JSON file on page load
+        fetch('/courses.json')
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Failed to load courses data.');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                coursesData = data;
+            })
+            .catch(function(error) {
+                console.error('Error fetching courses:', error);
+            });
+
+        function searchCourse() {
+            const code = document.getElementById("courseCode").value.trim();
+            const resultDiv = document.getElementById("result");
+            const errorDiv = document.getElementById("error");
+            
+            // Clear previous results or errors
+            resultDiv.textContent = "";
+            errorDiv.textContent = "";
+
+            // Search the courses object
+            if (code in coursesData) {
+                resultDiv.textContent = `Course Name: ${coursesData[code]}`;
+            } else {
+                errorDiv.textContent = "No course found with this code. Please try again.";
+            }
+        }
+    </script>
+</body>
+</html>
