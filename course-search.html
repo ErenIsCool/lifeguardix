@@ -103,7 +103,8 @@
 
             // Search the courses object
             if (code in coursesData) {
-                resultDiv.textContent = `Course Name: ${coursesData[code]}`;
+                const course = coursesData[code];
+                resultDiv.textContent = `Course Name: ${course.name}`;
             } else {
                 errorDiv.textContent = "No course found with this code. Please try again.";
             }
